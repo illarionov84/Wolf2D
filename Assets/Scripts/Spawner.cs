@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour
 
     void Start()
     {
-        CreateEnemy(enemyPref[0]);
+        CreateEnemy(enemyPref[Random.Range(0, enemyPref.Length)]);
     }
 
     void CreateEnemy(GameObject Enemy)
@@ -21,7 +21,8 @@ public class Spawner : MonoBehaviour
     {
         if (currentEnemy==null)
         {
-            CreateEnemy(enemyPref[0]);
+            transform.position = new Vector3(Random.Range(-3.0f, 3.0f), transform.position.y, transform.position.z);
+            CreateEnemy(enemyPref[Random.Range(0, enemyPref.Length)]);
         }
     }
 }

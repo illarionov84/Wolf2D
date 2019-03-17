@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    float speed = 0.3f;
-    public int damage = 2;
-    public int direction = 1;
+    private float speed;
+    public int damage;
+    public int direction;
+
+    private void Start()
+    {
+        speed = 0.3f;
+        damage = 2;
+    }
 
     void Update()
     {
