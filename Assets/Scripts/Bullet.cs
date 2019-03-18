@@ -37,7 +37,6 @@ public class Bullet : MonoBehaviour
                 GameObject temp = collision.gameObject;
                 temp.GetComponent<Enemy>().health--;
                 Destroy(gameObject);
-                Debug.Log("Попал во врага");
             }
         }
         else
@@ -47,7 +46,6 @@ public class Bullet : MonoBehaviour
                 GameObject temp = collision.gameObject;
                 temp.GetComponent<Player>().health--;
                 Destroy(gameObject);
-                Debug.Log("Попал в игрока");
             }
         }
     }

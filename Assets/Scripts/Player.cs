@@ -19,6 +19,9 @@ public class Player : MonoBehaviour
     public bool ground;
     private Camera mainCam;
     public float camSpeed;
+    public Animator anim;
+    public AudioSource _audio;
+    public AudioClip[] audioClips;
 
     void Start()
     {
@@ -27,6 +30,8 @@ public class Player : MonoBehaviour
         health = 10;
         gunPos = transform.GetChild(0);
         _rigidbody = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        _audio = GetComponent<AudioSource>();
         jumpForce = 3;
         mainCam = Camera.main;
         camSpeed = 3.0f;
@@ -37,6 +42,9 @@ public class Player : MonoBehaviour
         GameObject temp = Instantiate(prefBullet, gunPos.position, Quaternion.identity);
         temp.name = "Bullet";
         temp.GetComponent<Bullet>().direction = (!right) ? 1 : -1;
+        anim.SetInteger("State", 2);
+        _audio.clip = audioClips[0];
+        _audio.Play();
     }
 
     void Jump()
@@ -55,6 +63,7 @@ public class Player : MonoBehaviour
             Flip();
         }
 
+        anim.SetInteger("State", 1);
         direction = Vector2.right * horizontal;
         transform.position = Vector2.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
     }
@@ -88,6 +97,8 @@ public class Player : MonoBehaviour
         mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, new Vector3(transform.position.x, transform.position.y + 0.5f, mainCam.transform.position.z), Time.deltaTime * camSpeed);
 
         horizontal = Input.GetAxis("Horizontal");
+
+        anim.SetInteger("State", 0);
 
         if (Input.GetButton("Horizontal"))
         {

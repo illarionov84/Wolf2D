@@ -19,6 +19,9 @@ public class Enemy : MonoBehaviour
     public float rayDistance;
     public float attackDistance;
     public GameObject enemyBulletPref;
+    public Animator anim;
+    public AudioSource _audio;
+    public AudioClip[] audioClips;
 
     void Start()
     {
@@ -29,6 +32,8 @@ public class Enemy : MonoBehaviour
         direction = Vector3.left;
         patrol = true;
         attackDistance = 3.0f;
+        anim = GetComponent<Animator>();
+        _audio = GetComponent<AudioSource>();
     }
 
     void Flip()
@@ -43,20 +48,20 @@ public class Enemy : MonoBehaviour
 
     IEnumerator enemyShoot()
     {
-        for (int i = 0; i < 10; i++)
+        _audio.clip = audioClips[0];
+        _audio.Play();
+        anim.SetInteger("State", 2);
+        GameObject temp = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
+        temp.name = "EnemyBullet";
+        if (right)
         {
-            GameObject temp = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
-            temp.name = "EnemyBullet";
-            if (right)
-            {
-                temp.GetComponent<Bullet>().direction = 1;
-            }
-            else
-            {
-                temp.GetComponent<Bullet>().direction = -1;
-            }
-            yield return new WaitForSeconds(1);
+            temp.GetComponent<Bullet>().direction = 1;
         }
+        else
+        {
+            temp.GetComponent<Bullet>().direction = -1;
+        }
+        yield return new WaitForSeconds(1);
         shooting = false;
     }
 
@@ -70,10 +75,10 @@ public class Enemy : MonoBehaviour
             if (patrol)
             {
                 Y = -0.5f;
-                rayDistance = 1.0f;
+                rayDistance = 2.0f;
                 if (hit.collider)
                 {
-                    Debug.Log(hit.collider.name);
+                    //Debug.Log(hit.collider.name);
                     Move();
                 }
                 else
@@ -103,10 +108,12 @@ public class Enemy : MonoBehaviour
                 }
             }
 
+            /*
             if (hit != false)
             {
                 Debug.Log(hit.collider.name);
             }
+            */
         }
     }
 
@@ -154,6 +161,7 @@ public class Enemy : MonoBehaviour
     void Move()
     {
         transform.position = Vector2.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
+        anim.SetInteger("State", 1);
     }
 
     void Update()
