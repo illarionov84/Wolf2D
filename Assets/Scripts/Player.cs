@@ -7,9 +7,9 @@ public class Player : MonoBehaviour
 {
     public Collider2D Coll;
     public Vector3 direction;
-    public int speed;
+    public float speed;
     public float horizontal;
-    bool right;
+    private bool right;
     public SpriteRenderer rend;
     public int health;
     public GameObject prefBullet;
@@ -17,15 +17,19 @@ public class Player : MonoBehaviour
     public Rigidbody2D _rigidbody;
     public int jumpForce;
     public bool ground;
+    private Camera mainCam;
+    public float camSpeed;
 
     void Start()
     {
-        speed = 4;
+        speed = 4.0f;
         rend = GetComponent<SpriteRenderer>();
         health = 10;
         gunPos = transform.GetChild(0);
         _rigidbody = GetComponent<Rigidbody2D>();
         jumpForce = 3;
+        mainCam = Camera.main;
+        camSpeed = 3.0f;
     }
 
     void Shoot()
@@ -81,6 +85,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, new Vector3(transform.position.x, transform.position.y + 0.5f, mainCam.transform.position.z), Time.deltaTime * camSpeed);
+
         horizontal = Input.GetAxis("Horizontal");
 
         if (Input.GetButton("Horizontal"))
@@ -98,7 +104,7 @@ public class Player : MonoBehaviour
             Jump();
         }
 
-        if (transform.position.y < -10 || health <=0)
+        if (transform.position.y < -4.0f || health <=0)
         {
             SceneManager.LoadScene(0);
         }

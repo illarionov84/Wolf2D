@@ -21,7 +21,7 @@ public class Spawner : MonoBehaviour
     {
         if (currentEnemy==null)
         {
-            transform.position = new Vector3(Random.Range(-3.0f, 3.0f), transform.position.y, transform.position.z);
+            transform.position = new Vector3(Random.Range(-10.0f, 10.0f), transform.position.y, transform.position.z);
             CreateEnemy(enemyPref[Random.Range(0, enemyPref.Length)]);
         }
     }
