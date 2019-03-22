@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AI_ENEMY_STATE {IDLE = 0,
+                            PATROL = 1,
+                            CHASE = 2,
+                            ATTACK = 3,
+                            DEATH = 5};
+
 public class Enemy : MonoBehaviour
 {
+    public AI_ENEMY_STATE currentState = AI_ENEMY_STATE.IDLE;
+    public float AttackDelay;
     public int health;
     private bool right;
-    private bool active;
-    public bool angry;
-    public bool patrol;
-    public bool shooting;
+    public bool active;
     private Vector2 playerPos;
     private Vector3 direction;
     private float speed;
@@ -17,23 +22,32 @@ public class Enemy : MonoBehaviour
     public float X;
     public float Y;
     public float rayDistance;
-    public float attackDistance;
     public GameObject enemyBulletPref;
     public Animator anim;
     public AudioSource _audio;
     public AudioClip[] audioClips;
+    public bool CanSeePlayer;
+    private RaycastHit2D hit;
+    public bool dead;
 
-    void Start()
+    void Awake()
     {
+        AttackDelay = 1.0f;
         health = 3;
         speed = 1.0f;
         X = -0.5f;
         Y = -0.5f;
         direction = Vector3.left;
-        patrol = true;
-        attackDistance = 3.0f;
         anim = GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
+        _audio.clip = audioClips[0];
+        CanSeePlayer = false;
+        dead = false;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(State_Idle());
     }
 
     void Flip()
@@ -46,77 +60,15 @@ public class Enemy : MonoBehaviour
         transform.localScale = sc;
     }
 
-    IEnumerator enemyShoot()
-    {
-        _audio.clip = audioClips[0];
-        _audio.Play();
-        anim.SetInteger("State", 2);
-        GameObject temp = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
-        temp.name = "EnemyBullet";
-        if (right)
-        {
-            temp.GetComponent<Bullet>().direction = 1;
-        }
-        else
-        {
-            temp.GetComponent<Bullet>().direction = -1;
-        }
-        yield return new WaitForSeconds(1);
-        shooting = false;
-    }
-
     private void FixedUpdate()
     {
         if (active)
         {
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, new Vector2(X, Y), rayDistance, mask);
+            hit = Physics2D.Raycast(transform.position, new Vector2(X, Y), rayDistance, mask);
             Debug.DrawRay(transform.position, new Vector2(X, Y), Color.red);
-
-            if (patrol)
-            {
-                Y = -0.5f;
-                rayDistance = 2.0f;
-                if (hit.collider)
-                {
-                    //Debug.Log(hit.collider.name);
-                    Move();
-                }
-                else
-                {
-                    Flip();
-                }
-            }
-            else
-            {
-                Y = 0;
-                rayDistance = attackDistance;
-                if (Mathf.Abs(transform.position.x - playerPos.x) <= rayDistance)
-                {
-                    if (hit.collider)
-                    {
-                        if (hit.collider.tag == "Player" && shooting == false)
-                        {
-                            StartCoroutine(enemyShoot());
-                            shooting = true;
-                        }
-                    }
-                }
-                else
-                {
-                    direction = GetDirection();
-                    Move();
-                }
-            }
-
-            /*
-            if (hit != false)
-            {
-                Debug.Log(hit.collider.name);
-            }
-            */
         }
     }
-
+    
     private void OnBecameInvisible()
     {
         active = false;
@@ -126,14 +78,13 @@ public class Enemy : MonoBehaviour
     {
         active = true;
     }
-
+    
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
             playerPos = collision.transform.position;
-            angry = true;
-            patrol = false;
+            CanSeePlayer = true;
         }
     }
 
@@ -141,8 +92,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            patrol = true;
-            angry = false;
+            CanSeePlayer = false;
         }
     }
 
@@ -161,14 +111,120 @@ public class Enemy : MonoBehaviour
     void Move()
     {
         transform.position = Vector2.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
-        anim.SetInteger("State", 1);
     }
 
     void Update()
     {
-        if (transform.position.y < -10 || health <= 0)
+        if (transform.position.y < -10)
         {
             Destroy(gameObject);
         }
+        if (health <= 0 && !dead)
+        {
+            StartCoroutine(State_Death());
+        }
     }
+
+    //--------------------------------------------------
+    #region States
+    //--------------------------------------------------
+
+    public IEnumerator State_Idle()
+    {
+        currentState = AI_ENEMY_STATE.IDLE;
+        anim.SetInteger("State", (int)AI_ENEMY_STATE.IDLE);
+        _audio.Stop();
+        while (currentState == AI_ENEMY_STATE.IDLE)
+        {
+            if (active)
+            {
+                StartCoroutine(State_Patrol());
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    public IEnumerator State_Patrol()
+    {
+        currentState = AI_ENEMY_STATE.PATROL;
+        anim.SetInteger("State", (int)AI_ENEMY_STATE.PATROL);
+        _audio.Stop();
+        while (currentState == AI_ENEMY_STATE.PATROL)
+        {
+            Y = -1.0f;
+            rayDistance = 2.0f;
+            if (hit.collider)
+            {
+                Move();
+            }
+            else
+            {
+                Flip();
+            }
+            if (CanSeePlayer)
+            {
+                StartCoroutine(State_Attack());
+                yield break;
+            }
+            yield return null;
+        }
+    }
+
+    public IEnumerator State_Chase()
+    {
+        //
+
+        yield return null;
+    }
+
+    public IEnumerator State_Attack()
+    {
+        currentState = AI_ENEMY_STATE.ATTACK;
+        anim.SetInteger("State", (int)AI_ENEMY_STATE.ATTACK);
+        _audio.Play();
+        float ElapsedTime = 0.0f;
+        while (currentState == AI_ENEMY_STATE.ATTACK)
+        {
+            ElapsedTime += Time.deltaTime;
+            if (!CanSeePlayer)
+            {
+                StartCoroutine(State_Patrol());
+                yield break;
+            }
+            else
+            {
+                GameObject temp = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
+                temp.name = "EnemyBullet";
+                if (right)
+                {
+                    temp.GetComponent<Bullet>().direction = 1;
+                }
+                else
+                {
+                    temp.GetComponent<Bullet>().direction = -1;
+                }
+            }
+            if (ElapsedTime >= AttackDelay)
+            {
+                ElapsedTime = 0.0f;
+            }
+
+            yield return new WaitForSeconds(1);
+        }
+    }
+
+    public IEnumerator State_Death()
+    {
+        dead = true;
+        currentState = AI_ENEMY_STATE.DEATH;
+        anim.SetInteger("State", (int)AI_ENEMY_STATE.DEATH);
+        _audio.Stop();
+        yield return null;
+    }
+
+    //--------------------------------------------------
+    #endregion
+    //--------------------------------------------------
+
 }
