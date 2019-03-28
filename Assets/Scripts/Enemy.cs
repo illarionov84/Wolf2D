@@ -10,11 +10,27 @@ public enum AI_ENEMY_STATE {IDLE = 0,
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField]
+    private int _health;
+    public int Health
+    {
+        get { return _health; }
+        set
+        {
+            _health = value;
+            //Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
+            if (_health <= 0 && !dead)
+            {
+                StartCoroutine(State_Death());
+            }
+        }
+    }
+
+    [SerializeField]
+    private bool active;
     public AI_ENEMY_STATE currentState = AI_ENEMY_STATE.IDLE;
     public float AttackDelay;
-    public int health;
     private bool right;
-    public bool active;
     private Vector2 playerPos;
     private Vector3 direction;
     private float speed;
@@ -32,8 +48,7 @@ public class Enemy : MonoBehaviour
 
     void Awake()
     {
-        AttackDelay = 1.0f;
-        health = 3;
+        Health = 3;
         speed = 1.0f;
         X = -0.5f;
         Y = -0.5f;
@@ -113,15 +128,26 @@ public class Enemy : MonoBehaviour
         transform.position = Vector2.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
     }
 
+    void Shoot()
+    {
+        GameObject temp = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
+        temp.name = "EnemyBullet";
+        if (right)
+        {
+            temp.GetComponent<Bullet>().direction = 1;
+        }
+        else
+        {
+            temp.GetComponent<Bullet>().direction = -1;
+        }
+        _audio.Play();
+    }
+
     void Update()
     {
         if (transform.position.y < -10)
         {
             Destroy(gameObject);
-        }
-        if (health <= 0 && !dead)
-        {
-            StartCoroutine(State_Death());
         }
     }
 
@@ -132,7 +158,7 @@ public class Enemy : MonoBehaviour
     public IEnumerator State_Idle()
     {
         currentState = AI_ENEMY_STATE.IDLE;
-        anim.SetInteger("State", (int)AI_ENEMY_STATE.IDLE);
+        anim.SetInteger("State", 0);
         _audio.Stop();
         while (currentState == AI_ENEMY_STATE.IDLE)
         {
@@ -148,7 +174,7 @@ public class Enemy : MonoBehaviour
     public IEnumerator State_Patrol()
     {
         currentState = AI_ENEMY_STATE.PATROL;
-        anim.SetInteger("State", (int)AI_ENEMY_STATE.PATROL);
+        anim.SetInteger("State", 1);
         _audio.Stop();
         while (currentState == AI_ENEMY_STATE.PATROL)
         {
@@ -181,36 +207,15 @@ public class Enemy : MonoBehaviour
     public IEnumerator State_Attack()
     {
         currentState = AI_ENEMY_STATE.ATTACK;
-        anim.SetInteger("State", (int)AI_ENEMY_STATE.ATTACK);
-        _audio.Play();
-        float ElapsedTime = 0.0f;
+        anim.SetInteger("State", 2);
         while (currentState == AI_ENEMY_STATE.ATTACK)
         {
-            ElapsedTime += Time.deltaTime;
             if (!CanSeePlayer)
             {
                 StartCoroutine(State_Patrol());
                 yield break;
             }
-            else
-            {
-                GameObject temp = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
-                temp.name = "EnemyBullet";
-                if (right)
-                {
-                    temp.GetComponent<Bullet>().direction = 1;
-                }
-                else
-                {
-                    temp.GetComponent<Bullet>().direction = -1;
-                }
-            }
-            if (ElapsedTime >= AttackDelay)
-            {
-                ElapsedTime = 0.0f;
-            }
-
-            yield return new WaitForSeconds(1);
+            yield return null;
         }
     }
 
@@ -218,7 +223,7 @@ public class Enemy : MonoBehaviour
     {
         dead = true;
         currentState = AI_ENEMY_STATE.DEATH;
-        anim.SetInteger("State", (int)AI_ENEMY_STATE.DEATH);
+        anim.SetInteger("State", 5);
         _audio.Stop();
         yield return null;
     }

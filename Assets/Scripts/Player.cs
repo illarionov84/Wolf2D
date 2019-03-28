@@ -3,31 +3,52 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum PLAYER_STATE {IDLE = 0,
+                          MOVE = 1,
+                          ATTACK = 2};
+
 public class Player : MonoBehaviour
 {
-    public Collider2D Coll;
-    public Vector3 direction;
-    public float speed;
-    public float horizontal;
+    [SerializeField]
+    private int _health;
+    public int Health
+    {
+        get { return _health; }
+        set
+        {
+            _health = value;
+            if (_health <= 0)
+            {
+                Messenger.Broadcast(GameEvent.LEVEL_FAILED);
+                //SceneManager.LoadScene(0);
+            }
+            Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
+        }
+    }
+
+    public PLAYER_STATE currentState = PLAYER_STATE.IDLE;
+    private Collider2D Coll;
+    private Vector3 direction;
+    private float speed;
+    private float horizontal;
     private bool right;
-    public SpriteRenderer rend;
-    public int health;
+    private SpriteRenderer rend;
     public GameObject prefBullet;
-    public Transform gunPos;
-    public Rigidbody2D _rigidbody;
+    private Transform gunPos;
+    private Rigidbody2D _rigidbody;
     public int jumpForce;
     public bool ground;
     private Camera mainCam;
     public float camSpeed;
-    public Animator anim;
-    public AudioSource _audio;
+    private Animator anim;
+    private AudioSource _audio;
     public AudioClip[] audioClips;
 
-    void Start()
+    void Awake()
     {
         speed = 4.0f;
         rend = GetComponent<SpriteRenderer>();
-        health = 10;
+        _health = 10;
         gunPos = transform.GetChild(0);
         _rigidbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
@@ -37,12 +58,17 @@ public class Player : MonoBehaviour
         camSpeed = 3.0f;
     }
 
+    private void Start()
+    {
+        anim.SetInteger("State", 0);
+    }
+
     void Shoot()
     {
+        currentState = PLAYER_STATE.ATTACK;
         GameObject temp = Instantiate(prefBullet, gunPos.position, Quaternion.identity);
         temp.name = "Bullet";
         temp.GetComponent<Bullet>().direction = (!right) ? 1 : -1;
-        anim.SetInteger("State", 2);
         _audio.clip = audioClips[0];
         _audio.Play();
     }
@@ -54,6 +80,8 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        currentState = PLAYER_STATE.MOVE;
+        anim.SetInteger("State", 1);
         if (horizontal > 0 && right)
         {
             Flip();
@@ -63,7 +91,6 @@ public class Player : MonoBehaviour
             Flip();
         }
 
-        anim.SetInteger("State", 1);
         direction = Vector2.right * horizontal;
         transform.position = Vector2.MoveTowards(transform.position, transform.position + direction, speed * Time.deltaTime);
     }
@@ -98,26 +125,25 @@ public class Player : MonoBehaviour
 
         horizontal = Input.GetAxis("Horizontal");
 
+        currentState = PLAYER_STATE.IDLE;
         anim.SetInteger("State", 0);
 
         if (Input.GetButton("Horizontal"))
         {
             Move();
         }
-
         if (Input.GetButtonDown("Fire1"))
         {
-            Shoot();
+            anim.SetInteger("State", 2);
         }
-
         if (Input.GetKeyDown(KeyCode.UpArrow) && ground)
         {
             Jump();
         }
-
-        if (transform.position.y < -4.0f || health <=0)
+        if (transform.position.y < -4.0f)
         {
-            SceneManager.LoadScene(0);
+            Messenger.Broadcast(GameEvent.LEVEL_FAILED);
+            //SceneManager.LoadScene(0);
         }
     }
 }

@@ -35,7 +35,7 @@ public class Bullet : MonoBehaviour
             if (collision.gameObject.tag == "Enemy")
             {
                 GameObject temp = collision.gameObject;
-                temp.GetComponent<Enemy>().health--;
+                temp.GetComponent<Enemy>().Health--;
                 Destroy(gameObject);
             }
         }
@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour
             if (collision.gameObject.tag == "Player")
             {
                 GameObject temp = collision.gameObject;
-                temp.GetComponent<Player>().health--;
+                temp.GetComponent<Player>().Health--;
                 Destroy(gameObject);
             }
         }

@@ -52,16 +52,13 @@ MonoBehaviour:
   currentState: 0
   AttackDelay: 1
   health: 0
-  angry: 0
-  patrol: 0
-  shooting: 0
+  active: 0
   mask:
     serializedVersion: 2
     m_Bits: 1
   X: 0
   Y: 0
   rayDistance: 0
-  attackDistance: 0
   enemyBulletPref: {fileID: 187579858344635225, guid: 48b01109617e30a4983f3d221ecfd071,
     type: 3}
   anim: {fileID: 0}
@@ -69,6 +66,7 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: 335efa36d22106344bf800b677498573, type: 3}
   CanSeePlayer: 0
+  dead: 0
 --- !u!212 &442834148409718164
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -223,7 +221,7 @@ AudioSource:
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
-  Loop: 1
+  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
