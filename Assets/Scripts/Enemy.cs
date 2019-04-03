@@ -10,8 +10,7 @@ public enum AI_ENEMY_STATE {IDLE = 0,
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField]
-    private int _health;
+    [SerializeField] private int _health;
     public int Health
     {
         get { return _health; }
@@ -26,8 +25,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    private bool active;
+    [SerializeField] private bool active;
     public AI_ENEMY_STATE currentState = AI_ENEMY_STATE.IDLE;
     public float AttackDelay;
     private bool right;

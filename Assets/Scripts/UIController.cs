@@ -21,21 +21,13 @@ public class UIController : MonoBehaviour {
     }
 
 	private void OnLevelFailed() {
-		StartCoroutine(FailLevel());
-	}
-	private IEnumerator FailLevel() {
         Debug.Log("Уровень перезагружен");
-        yield return new WaitForSeconds(1);
-		Managers.Player.Respawn();
-		Managers.Mission.RestartCurrent();
+        Managers.Player.Respawn();
+        Managers.Mission.RestartCurrent();
 	}
 
 	private void OnLevelComplete() {
-		StartCoroutine(CompleteLevel());
-	}
-	private IEnumerator CompleteLevel() {
         Debug.Log("Уровень пройден");
-        yield return new WaitForSeconds(1);
         Managers.Mission.GoToNext();
 	}
 
