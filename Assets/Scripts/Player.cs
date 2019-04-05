@@ -3,31 +3,131 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum PLAYER_STATE {IDLE = 0,
-                          MOVE = 1,
-                          ATTACK = 2};
+public enum PLAYER_STATE
+{
+    IDLE = 0,
+    MOVE = 1,
+    ATTACK = 2
+};
+
+public enum CURRENT_WEAPON
+{
+    KNIFE = 0,
+    PISTOL = 1,
+    MACHINEGUN = 2,
+    CHAINGUN = 3
+};
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private int _health;
+    private UI HUD;
+
+    [SerializeField] private int _scores;
+    public int Scores
+    {
+        get { return _scores; }
+        set
+        {
+            _scores = value;
+            HUD.Scores = _scores.ToString();
+        }
+    }
+
+    [SerializeField] private int _lives;
+    public int Lives
+    {
+        get { return _lives; }
+        set
+        {
+            if (value > 99) _lives = 10;
+            else if (value < 0) _lives = 0;
+            else _lives = value;
+            HUD.Lives = _lives.ToString();
+        }
+    }
+
+    [SerializeField] private int _health;
     public int Health
     {
         get { return _health; }
         set
         {
-            _health = value;
+            if (value > 100) _health = 100;
+            else if (value < 0) _health = 0;
+            else _health = value;
+            HUD.Health = _health.ToString();
             if (_health <= 0)
             {
                 Messenger.Broadcast(GameEvent.LEVEL_FAILED);
-                //SceneManager.LoadScene(0);
             }
             Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
         }
     }
 
+    [SerializeField] private int _ammo;
+    public int Ammo
+    {
+        get { return _ammo; }
+        set
+        {
+            if (value > 99) _ammo = 99;
+            else if (value < 0) _ammo = 0;
+            else _ammo = value;
+            HUD.Ammo = _ammo.ToString();
+        }
+    }
+
+    [SerializeField] private bool _goldKey;
+    public bool GoldKey
+    {
+        get { return _goldKey; }
+        set
+        {
+            _goldKey = value;
+        }
+    }
+
+    [SerializeField] private bool _silverKey;
+    public bool SilverKey
+    {
+        get { return _silverKey; }
+        set
+        {
+            _silverKey = value;
+        }
+    }
+
+    [SerializeField] private bool _machineGun;
+    public bool MachineGun
+    {
+        get { return _machineGun; }
+        set
+        {
+            _machineGun = value;
+        }
+    }
+
+    [SerializeField] private bool _chainGun;
+    public bool ChainGun
+    {
+        get { return _chainGun; }
+        set
+        {
+            _chainGun = value;
+        }
+    }
+
+    [SerializeField] private CURRENT_WEAPON _currentWeapon;
+    public CURRENT_WEAPON CurrentWeapon
+    {
+        get { return _currentWeapon; }
+        set
+        {
+            _currentWeapon = value;
+        }
+    }
+
     public PLAYER_STATE currentState = PLAYER_STATE.IDLE;
-    private Collider2D Coll;
     private Vector3 direction;
     private float speed;
     private float horizontal;
@@ -36,24 +136,24 @@ public class Player : MonoBehaviour
     public GameObject prefBullet;
     private Transform gunPos;
     private Rigidbody2D _rigidbody;
-    public int jumpForce;
-    public bool ground;
     private Camera mainCam;
-    public float camSpeed;
+    private float camSpeed;
     private Animator anim;
     private AudioSource _audio;
     public AudioClip[] audioClips;
 
     void Awake()
     {
-        speed = 4.0f;
+        HUD = GameObject.Find("Canvas").GetComponent<UI>();
+        speed = 1.5f;
         rend = GetComponent<SpriteRenderer>();
-        _health = 10;
+        Lives = 3;
+        Health = 100;
+        Ammo = 8;
         gunPos = transform.GetChild(0);
         _rigidbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
-        jumpForce = 3;
         mainCam = Camera.main;
         camSpeed = 3.0f;
     }
@@ -65,17 +165,13 @@ public class Player : MonoBehaviour
 
     void Shoot()
     {
+        Ammo--;
         currentState = PLAYER_STATE.ATTACK;
         GameObject temp = Instantiate(prefBullet, gunPos.position, Quaternion.identity);
         temp.name = "Bullet";
         temp.GetComponent<Bullet>().direction = (!right) ? 1 : -1;
         _audio.clip = audioClips[0];
         _audio.Play();
-    }
-
-    void Jump()
-    {
-        _rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
     void Move()
@@ -103,22 +199,6 @@ public class Player : MonoBehaviour
         transform.localScale = sc;
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Floor")
-        {
-            ground = true;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Floor")
-        {
-            ground = false;
-        }
-    }
-
     void Update()
     {
         mainCam.transform.position = Vector3.Lerp(mainCam.transform.position, new Vector3(transform.position.x, transform.position.y + 0.5f, mainCam.transform.position.z), Time.deltaTime * camSpeed);
@@ -135,15 +215,6 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Fire1"))
         {
             anim.SetInteger("State", 2);
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow) && ground)
-        {
-            Jump();
-        }
-        if (transform.position.y < -4.0f)
-        {
-            Messenger.Broadcast(GameEvent.LEVEL_FAILED);
-            //SceneManager.LoadScene(0);
         }
     }
 }

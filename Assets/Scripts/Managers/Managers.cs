@@ -2,11 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(PlayerManager))]
 [RequireComponent(typeof(MissionManager))]
 
 public class Managers : MonoBehaviour {
-	public static PlayerManager Player {get; private set;}
 	public static MissionManager Mission {get; private set;}
 
 	private List<IGameManager> _startSequence;
@@ -14,11 +12,9 @@ public class Managers : MonoBehaviour {
 	void Awake() {
 		DontDestroyOnLoad(gameObject);
 
-		Player = GetComponent<PlayerManager>();
 		Mission = GetComponent<MissionManager>();
 
 		_startSequence = new List<IGameManager>();
-		_startSequence.Add(Player);
 		_startSequence.Add(Mission);
 
 		StartCoroutine(StartupManagers());

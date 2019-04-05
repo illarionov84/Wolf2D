@@ -32,7 +32,6 @@ public class Lift : MonoBehaviour
 
     void Awake()
     {
-        _isDown = false;
         processed = false;
         currentPos = transform.position;
         if (IsDown)
@@ -54,6 +53,7 @@ public class Lift : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             canOpened = true;
+            collision.transform.parent = transform;
         }
     }
 
@@ -62,6 +62,7 @@ public class Lift : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             canOpened = false;
+            collision.transform.parent = null;
         }
     }
 

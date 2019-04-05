@@ -17,7 +17,6 @@ public class Enemy : MonoBehaviour
         set
         {
             _health = value;
-            //Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
             if (_health <= 0 && !dead)
             {
                 StartCoroutine(State_Death());
@@ -48,8 +47,8 @@ public class Enemy : MonoBehaviour
     {
         Health = 3;
         speed = 1.0f;
-        X = -0.5f;
-        Y = -0.5f;
+        X = -1.0f;
+        Y = 0.0f;
         direction = Vector3.left;
         anim = GetComponent<Animator>();
         _audio = GetComponent<AudioSource>();
@@ -141,14 +140,6 @@ public class Enemy : MonoBehaviour
         _audio.Play();
     }
 
-    void Update()
-    {
-        if (transform.position.y < -10)
-        {
-            Destroy(gameObject);
-        }
-    }
-
     //--------------------------------------------------
     #region States
     //--------------------------------------------------
@@ -176,15 +167,15 @@ public class Enemy : MonoBehaviour
         _audio.Stop();
         while (currentState == AI_ENEMY_STATE.PATROL)
         {
-            Y = -1.0f;
-            rayDistance = 2.0f;
+            Y = 0.0f;
+            rayDistance = 0.5f;
             if (hit.collider)
             {
-                Move();
+                Flip();
             }
             else
             {
-                Flip();
+                Move();
             }
             if (CanSeePlayer)
             {
@@ -221,6 +212,7 @@ public class Enemy : MonoBehaviour
     {
         dead = true;
         currentState = AI_ENEMY_STATE.DEATH;
+        gameObject.layer = 10;
         anim.SetInteger("State", 5);
         _audio.Stop();
         yield return null;

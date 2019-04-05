@@ -12,7 +12,7 @@ public class MissionManager : MonoBehaviour, IGameManager {
 	public void Startup() {
 		Debug.Log("Mission manager starting...");
 		
-		UpdateData(0, 3);
+		UpdateData(0, SceneManager.sceneCountInBuildSettings-1);
 		
 		status = ManagerStatus.Started;
 	}

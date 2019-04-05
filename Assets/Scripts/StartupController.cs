@@ -20,6 +20,6 @@ public class StartupController : MonoBehaviour {
 	}
 
 	private void OnManagersStarted() {
-		Managers.Mission.GoToNext();
-	}
+        Debug.Log("Все менеджеры загружены");
+    }
 }
