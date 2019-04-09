@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GoldKey : MonoBehaviour
+namespace Wolf2D
 {
-    void OnTriggerEnter2D(Collider2D collision)
+
+    public class GoldKey : MonoBehaviour
     {
-        if (collision.gameObject.tag == "Player")
+        void OnTriggerEnter2D(Collider2D collision)
         {
-            GameObject temp = collision.gameObject;
-            temp.GetComponent<Player>().GoldKey = true;
-            Destroy(gameObject);
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.GetComponent<Player>().GoldKey = true;
+                Destroy(gameObject);
+            }
         }
     }
+
 }

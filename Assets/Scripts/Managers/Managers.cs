@@ -2,53 +2,66 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(MissionManager))]
+namespace Wolf2D
+{
 
-public class Managers : MonoBehaviour {
-	public static MissionManager Mission {get; private set;}
+    [RequireComponent(typeof(MissionManager))]
 
-	private List<IGameManager> _startSequence;
-	
-	void Awake() {
-		DontDestroyOnLoad(gameObject);
+    public class Managers : MonoBehaviour
+    {
+        public static MissionManager Mission { get; private set; }
 
-		Mission = GetComponent<MissionManager>();
+        private List<IGameManager> _startSequence;
 
-		_startSequence = new List<IGameManager>();
-		_startSequence.Add(Mission);
+        void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
 
-		StartCoroutine(StartupManagers());
-	}
+            Mission = GetComponent<MissionManager>();
 
-	private IEnumerator StartupManagers() {
-		foreach (IGameManager manager in _startSequence) {
-			manager.Startup();
-		}
+            _startSequence = new List<IGameManager>();
+            _startSequence.Add(Mission);
 
-		yield return null;
+            StartCoroutine(StartupManagers());
+        }
 
-		int numModules = _startSequence.Count;
-		int numReady = 0;
-		
-		while (numReady < numModules) {
-			int lastReady = numReady;
-			numReady = 0;
-			
-			foreach (IGameManager manager in _startSequence) {
-				if (manager.status == ManagerStatus.Started) {
-					numReady++;
-				}
-			}
-			
-			if (numReady > lastReady) {
-				Debug.Log("Progress: " + numReady + "/" + numModules);
-				Messenger<int, int>.Broadcast(StartupEvent.MANAGERS_PROGRESS, numReady, numModules);
-			}
-			
-			yield return null;
-		}
+        private IEnumerator StartupManagers()
+        {
+            foreach (IGameManager manager in _startSequence)
+            {
+                manager.Startup();
+            }
 
-		Debug.Log("All managers started up");
-		Messenger.Broadcast(StartupEvent.MANAGERS_STARTED);
-	}
+            yield return null;
+
+            int numModules = _startSequence.Count;
+            int numReady = 0;
+
+            while (numReady < numModules)
+            {
+                int lastReady = numReady;
+                numReady = 0;
+
+                foreach (IGameManager manager in _startSequence)
+                {
+                    if (manager.status == ManagerStatus.Started)
+                    {
+                        numReady++;
+                    }
+                }
+
+                if (numReady > lastReady)
+                {
+                    Debug.Log("Progress: " + numReady + "/" + numModules);
+                    Messenger<int, int>.Broadcast(StartupEvent.MANAGERS_PROGRESS, numReady, numModules);
+                }
+
+                yield return null;
+            }
+
+            Debug.Log("All managers started up");
+            Messenger.Broadcast(StartupEvent.MANAGERS_STARTED);
+        }
+    }
+
 }

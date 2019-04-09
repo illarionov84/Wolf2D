@@ -2,56 +2,66 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+namespace Wolf2D
 {
-    private float speed;
-    public int damage;
-    public int direction;
-    public bool playerBullet;
 
-    private void Start()
+    public class Bullet : BaseObject
     {
-        speed = 0.3f;
-        damage = 2;
-        if (gameObject.name == "Bullet")
-        {
-            playerBullet = true;
-        }
-        else
-        {
-            playerBullet = false;
-        }
-    }
+        private float speed;
+        public int damage;
+        public int direction;
+        public bool playerBullet;
 
-    void Update()
-    {
-        transform.position += Vector3.right * direction * speed;
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (playerBullet)
+        private void Start()
         {
-            if (collision.gameObject.tag == "Enemy")
+            speed = 0.3f;
+            damage = 2;
+            if (gameObject.name == "Bullet")
             {
-                GameObject temp = collision.gameObject;
-                temp.GetComponent<Enemy>().Health--;
-                Destroy(gameObject);
+                playerBullet = true;
+            }
+            else
+            {
+                playerBullet = false;
             }
         }
-        else
+
+        /*
+        void Update()
         {
-            if (collision.gameObject.tag == "Player")
+            transform.position += Vector3.right * direction * speed;
+        }
+        */
+
+        public override void OnTick()
+        {
+            transform.position += Vector3.right * direction * speed;
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (playerBullet)
             {
-                GameObject temp = collision.gameObject;
-                temp.GetComponent<Player>().Health--;
-                Destroy(gameObject);
+                if (collision.gameObject.CompareTag("Enemy"))
+                {
+                    collision.GetComponent<Enemy>().Health--;
+                    Destroy(gameObject);
+                }
             }
+            else
+            {
+                if (collision.gameObject.CompareTag("Player"))
+                {
+                    collision.GetComponent<Player>().Health--;
+                    Destroy(gameObject);
+                }
+            }
+        }
+
+        private void OnBecameInvisible()
+        {
+            Destroy(gameObject, 3.0f);
         }
     }
 
-    private void OnBecameInvisible()
-    {
-        Destroy(gameObject, 3.0f);
-    }
 }

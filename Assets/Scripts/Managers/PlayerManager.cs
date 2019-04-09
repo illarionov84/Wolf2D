@@ -2,40 +2,55 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlayerManager : MonoBehaviour, IGameManager {
-	public ManagerStatus status {get; private set;}
+namespace Wolf2D
+{
 
-	public int health {get; private set;}
-	public int maxHealth {get; private set;}
+    public class PlayerManager : MonoBehaviour, IGameManager
+    {
+        public ManagerStatus status { get; private set; }
 
-	public void Startup() {
-		Debug.Log("Player manager starting...");
+        public int health { get; private set; }
+        public int maxHealth { get; private set; }
 
-		UpdateData(50, 100);
+        public void Startup()
+        {
+            Debug.Log("Player manager starting...");
 
-		status = ManagerStatus.Started;
-	}
+            UpdateData(50, 100);
 
-	public void UpdateData(int health, int maxHealth) {
-		this.health = health;
-		this.maxHealth = maxHealth;
-	}
+            status = ManagerStatus.Started;
+        }
 
-	public void ChangeHealth(int value) {
-		health += value;
-		if (health > maxHealth) {
-			health = maxHealth;
-		} else if (health < 0) {
-			health = 0;
-		}
+        public void UpdateData(int health, int maxHealth)
+        {
+            this.health = health;
+            this.maxHealth = maxHealth;
+        }
 
-		if (health == 0) {
-			Messenger.Broadcast(GameEvent.LEVEL_FAILED);
-		}
-		Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
-	}
+        public void ChangeHealth(int value)
+        {
+            health += value;
+            if (health > maxHealth)
+            {
+                health = maxHealth;
+            }
+            else if (health < 0)
+            {
+                health = 0;
+            }
 
-	public void Respawn() {
-		UpdateData(50, 100);
-	}
+            if (health == 0)
+            {
+                Messenger.Broadcast(GameEvent.LEVEL_FAILED);
+            }
+
+            Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
+        }
+
+        public void Respawn()
+        {
+            UpdateData(50, 100);
+        }
+    }
+
 }

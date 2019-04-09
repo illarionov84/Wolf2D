@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ammo : MonoBehaviour
+namespace Wolf2D
 {
-    void OnTriggerEnter2D(Collider2D collision)
+
+    public class Ammo : MonoBehaviour
     {
-        if (collision.gameObject.tag == "Player")
+        void OnTriggerEnter2D(Collider2D collision)
         {
-            GameObject temp = collision.gameObject;
-            if (temp.GetComponent<Player>().Ammo < 99)
+            if (collision.gameObject.CompareTag("Player"))
             {
-                temp.GetComponent<Player>().Ammo += 8;
-                Destroy(gameObject);
+                if (collision.GetComponent<Player>().Ammo < 99)
+                {
+                    collision.GetComponent<Player>().Ammo += 8;
+                    Destroy(gameObject);
+                }
             }
         }
     }
+
 }

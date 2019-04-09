@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lives : MonoBehaviour
+namespace Wolf2D
 {
-    void OnTriggerEnter2D(Collider2D collision)
+
+    public class Lives : MonoBehaviour
     {
-        if (collision.gameObject.tag == "Player")
+        void OnTriggerEnter2D(Collider2D collision)
         {
-            GameObject temp = collision.gameObject;
-            temp.GetComponent<Player>().Lives++;
-            temp.GetComponent<Player>().Health = 100;
-            temp.GetComponent<Player>().Ammo = 99;
-            Destroy(gameObject);
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.GetComponent<Player>().Lives++;
+                collision.GetComponent<Player>().Health = 100;
+                collision.GetComponent<Player>().Ammo = 99;
+                Destroy(gameObject);
+            }
         }
     }
+
 }

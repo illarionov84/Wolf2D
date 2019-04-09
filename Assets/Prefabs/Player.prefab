@@ -59,7 +59,7 @@ MonoBehaviour:
   _chainGun: 0
   _currentWeapon: 0
   currentState: 0
-  prefBullet: {fileID: 187579858344635225, guid: 48b01109617e30a4983f3d221ecfd071,
+  prefBullet: {fileID: 4543117695096157733, guid: 48b01109617e30a4983f3d221ecfd071,
     type: 3}
   audioClips:
   - {fileID: 8300000, guid: 9f150d8e19e266d44b4cfb4cbd02170f, type: 3}

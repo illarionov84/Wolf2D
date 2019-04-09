@@ -2,27 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+namespace Wolf2D
 {
-    public GameObject[] enemyPref;
-    public GameObject currentEnemy;
 
-    void Start()
+    public class Spawner : MonoBehaviour
     {
-        CreateEnemy(enemyPref[Random.Range(0, enemyPref.Length)]);
-    }
+        public GameObject[] enemyPref;
+        public GameObject currentEnemy;
 
-    void CreateEnemy(GameObject Enemy)
-    {
-        currentEnemy = Instantiate(Enemy, transform.position, Quaternion.identity);
-    }
-
-    void Update()
-    {
-        if (currentEnemy==null)
+        void Start()
         {
-            transform.position = new Vector3(Random.Range(-10.0f, 10.0f), transform.position.y, transform.position.z);
             CreateEnemy(enemyPref[Random.Range(0, enemyPref.Length)]);
         }
+
+        void CreateEnemy(GameObject Enemy)
+        {
+            currentEnemy = Instantiate(Enemy, transform.position, Quaternion.identity);
+        }
+
+        void Update()
+        {
+            if (currentEnemy == null)
+            {
+                transform.position =
+                    new Vector3(Random.Range(-10.0f, 10.0f), transform.position.y, transform.position.z);
+                CreateEnemy(enemyPref[Random.Range(0, enemyPref.Length)]);
+            }
+        }
     }
+
 }

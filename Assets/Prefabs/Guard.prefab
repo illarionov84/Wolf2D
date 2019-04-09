@@ -59,7 +59,7 @@ MonoBehaviour:
   X: 0
   Y: 0
   rayDistance: 0
-  enemyBulletPref: {fileID: 187579858344635225, guid: 48b01109617e30a4983f3d221ecfd071,
+  enemyBulletPref: {fileID: 4543117695096157733, guid: 48b01109617e30a4983f3d221ecfd071,
     type: 3}
   anim: {fileID: 0}
   _audio: {fileID: 3761011398917214865}

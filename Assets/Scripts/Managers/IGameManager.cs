@@ -1,5 +1,11 @@
-﻿public interface IGameManager {
-	ManagerStatus status {get;}
+﻿namespace Wolf2D
+{
 
-	void Startup();
+    public interface IGameManager
+    {
+        ManagerStatus status { get; }
+
+        void Startup();
+    }
+
 }

@@ -1,5 +1,11 @@
-﻿public enum ManagerStatus {
-	Shutdown,
-	Initializing,
-	Started
+﻿namespace Wolf2D
+{
+
+    public enum ManagerStatus
+    {
+        Shutdown,
+        Initializing,
+        Started
+    }
+
 }

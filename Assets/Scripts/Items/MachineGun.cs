@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MachineGun : MonoBehaviour
+namespace Wolf2D
 {
-    void OnTriggerEnter2D(Collider2D collision)
+
+    public class MachineGun : MonoBehaviour
     {
-        if (collision.gameObject.tag == "Player")
+        void OnTriggerEnter2D(Collider2D collision)
         {
-            GameObject temp = collision.gameObject;
-            temp.GetComponent<Player>().MachineGun = true;
-            Destroy(gameObject);
+            if (collision.gameObject.CompareTag("Player"))
+            {
+                collision.GetComponent<Player>().MachineGun = true;
+                Destroy(gameObject);
+            }
         }
     }
+
 }
