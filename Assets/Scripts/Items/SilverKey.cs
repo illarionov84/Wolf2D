@@ -5,15 +5,11 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class SilverKey : MonoBehaviour
+    public class SilverKey : BaseItem
     {
-        void OnTriggerEnter2D(Collider2D collision)
+        public override void Action()
         {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                collision.GetComponent<Player>().SilverKey = true;
-                Destroy(gameObject);
-            }
+            coll.GetComponent<Player>().SilverKey = true;
         }
     }
 

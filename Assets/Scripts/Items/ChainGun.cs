@@ -5,15 +5,11 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class ChainGun : MonoBehaviour
+    public class ChainGun : BaseItem
     {
-        void OnTriggerEnter2D(Collider2D collision)
+        public override void Action()
         {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                collision.GetComponent<Player>().ChainGun = true;
-                Destroy(gameObject);
-            }
+            coll.GetComponent<Player>().ChainGun = true;
         }
     }
 

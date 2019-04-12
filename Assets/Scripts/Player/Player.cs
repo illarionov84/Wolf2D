@@ -8,7 +8,7 @@ namespace Wolf2D
 
     public class Player : BaseObject
     {
-        private UI HUD;
+        private UIController HUD;
 
         [SerializeField] private int _scores;
 
@@ -49,10 +49,8 @@ namespace Wolf2D
                 HUD.Health = _health.ToString();
                 if (_health <= 0)
                 {
-                    Messenger.Broadcast(GameEvent.LEVEL_FAILED);
+                    LevelController.Instance.hitEventLevelFailed.Invoke();
                 }
-
-                Messenger.Broadcast(GameEvent.HEALTH_UPDATED);
             }
         }
 
@@ -127,7 +125,7 @@ namespace Wolf2D
 
         void Awake()
         {
-            HUD = GameObject.Find("Canvas").GetComponent<UI>();
+            HUD = GameObject.Find("Canvas").GetComponent<UIController>();
             speed = 1.5f;
             rend = GetComponent<SpriteRenderer>();
             Lives = 3;
@@ -150,9 +148,10 @@ namespace Wolf2D
         {
             Ammo--;
             currentState = PLAYER_STATE.ATTACK;
-            Bullet bullet = Instantiate(prefBullet, gunPos.position, Quaternion.identity);
-            bullet.name = "Bullet";
-            bullet.direction = (!right) ? 1 : -1;
+            GameObject bullet= BulletsPool.Instance.GetBullet();
+            bullet.transform.position = gunPos.position;
+            bullet.GetComponent<Bullet>().name = "PlayerBullet";
+            bullet.GetComponent<Bullet>().direction = (!right) ? 1 : -1;
             _audio.clip = audioClips[0];
             _audio.Play();
         }
@@ -182,30 +181,6 @@ namespace Wolf2D
             sc.x *= -1;
             transform.localScale = sc;
         }
-
-        /*
-        void Update()
-        {
-            mainCam.transform.position = Vector3.Lerp(mainCam.transform.position,
-                new Vector3(transform.position.x, transform.position.y + 0.5f, mainCam.transform.position.z),
-                Time.deltaTime * camSpeed);
-
-            horizontal = Input.GetAxis("Horizontal");
-
-            currentState = PLAYER_STATE.IDLE;
-            anim.SetInteger("State", 0);
-
-            if (Input.GetButton("Horizontal"))
-            {
-                Move();
-            }
-
-            if (Input.GetButtonDown("Fire1"))
-            {
-                anim.SetInteger("State", 2);
-            }
-        }
-        */
 
         public override void OnTick()
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class DebugGUI : MonoBehaviour
+    public class DebugGUI : BaseObject
     {
         private float fps;
 
@@ -14,7 +14,7 @@ namespace Wolf2D
             GUI.Box(new Rect(10, 10, 120, 25), "FPS = " + fps);
         }
 
-        private void Update()
+        public override void OnTick()
         {
             fps = 1 / Time.deltaTime;
         }

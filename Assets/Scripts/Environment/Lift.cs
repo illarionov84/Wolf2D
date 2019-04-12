@@ -56,7 +56,7 @@ namespace Wolf2D
 
         private void OnTriggerStay2D(Collider2D collision)
         {
-            if (collision.gameObject.tag == "Player")
+            if (collision.gameObject.CompareTag("Player"))
             {
                 canOpened = true;
                 collision.transform.parent = transform;
@@ -65,7 +65,7 @@ namespace Wolf2D
 
         private void OnTriggerExit2D(Collider2D collision)
         {
-            if (collision.gameObject.tag == "Player")
+            if (collision.gameObject.CompareTag("Player"))
             {
                 canOpened = false;
                 collision.transform.parent = null;

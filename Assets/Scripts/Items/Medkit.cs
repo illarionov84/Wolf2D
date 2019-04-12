@@ -5,17 +5,15 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class Medkit : MonoBehaviour
+    public class Medkit : BaseItem
     {
-        void OnTriggerEnter2D(Collider2D collision)
+        public override void Action()
         {
-            if (collision.gameObject.CompareTag("Player"))
+            isDestroy = false;
+            if (coll.GetComponent<Player>().Health < 100)
             {
-                if (collision.GetComponent<Player>().Health < 100)
-                {
-                    collision.GetComponent<Player>().Health += 25;
-                    Destroy(gameObject);
-                }
+                coll.GetComponent<Player>().Health += 25;
+                isDestroy = true;
             }
         }
     }

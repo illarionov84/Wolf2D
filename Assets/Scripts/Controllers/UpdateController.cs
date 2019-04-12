@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class UpdateManager : MonoBehaviour
+    public class UpdateController : MonoBehaviour
     {
         void Update()
         {

@@ -5,17 +5,13 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class Lives : MonoBehaviour
+    public class Lives : BaseItem
     {
-        void OnTriggerEnter2D(Collider2D collision)
+        public override void Action()
         {
-            if (collision.gameObject.CompareTag("Player"))
-            {
-                collision.GetComponent<Player>().Lives++;
-                collision.GetComponent<Player>().Health = 100;
-                collision.GetComponent<Player>().Ammo = 99;
-                Destroy(gameObject);
-            }
+            coll.GetComponent<Player>().Lives++;
+            coll.GetComponent<Player>().Health = 100;
+            coll.GetComponent<Player>().Ammo = 99;
         }
     }
 

@@ -70,17 +70,6 @@ namespace Wolf2D
             transform.localScale = sc;
         }
 
-        /*
-        private void FixedUpdate()
-        {
-            if (active)
-            {
-                hit = Physics2D.Raycast(transform.position, new Vector2(X, Y), rayDistance, mask);
-                Debug.DrawRay(transform.position, new Vector2(X, Y), Color.red);
-            }
-        }
-        */
-
         public override void OnFixedTick()
         {
             if (active)
@@ -137,17 +126,10 @@ namespace Wolf2D
 
         void Shoot()
         {
-            Bullet bullet = Instantiate(enemyBulletPref, transform.position, Quaternion.identity);
-            bullet.name = "EnemyBullet";
-            if (right)
-            {
-                bullet.direction = 1;
-            }
-            else
-            {
-                bullet.direction = -1;
-            }
-
+            GameObject bullet = BulletsPool.Instance.GetBullet();
+            bullet.transform.position = transform.position;
+            bullet.GetComponent<Bullet>().name = "EnemyBullet";
+            bullet.GetComponent<Bullet>().direction = (right) ? 1 : -1;
             _audio.Play();
         }
 

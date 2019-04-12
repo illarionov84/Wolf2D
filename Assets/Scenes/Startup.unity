@@ -270,50 +270,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100680723}
   m_CullTransparentMesh: 0
---- !u!1 &223263456
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 223263458}
-  - component: {fileID: 223263457}
-  m_Layer: 0
-  m_Name: Startup Controller
-  m_TagString: Untagged
-  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &223263457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 223263456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de3554751b08724479f5f2b237d50d8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  progressBar: 0
---- !u!4 &223263458
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 223263456}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &279808456
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,7 +968,7 @@ RectTransform:
   - {fileID: 305644186}
   - {fileID: 279808459}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1358,12 +1314,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1067383402}
   - component: {fileID: 1067383406}
-  - component: {fileID: 1067383405}
-  - component: {fileID: 1067383404}
-  - component: {fileID: 1067383403}
   - component: {fileID: 1067383407}
+  - component: {fileID: 1067383408}
+  - component: {fileID: 1067383403}
   m_Layer: 0
-  m_Name: Game managers
+  m_Name: Controllers
   m_TagString: Untagged
   m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1392,31 +1347,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1067383401}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca614f06ae54c5a4586dc8033eed8125, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1067383404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067383401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d1bdd430266ac4d8d0805b8195ff6c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1067383405
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1067383401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5866f0932da8db45b87feb7b198a98a, type: 3}
+  m_Script: {fileID: 11500000, guid: f0de3029ef344294cbee564be5cfbfa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1067383406
@@ -1443,6 +1374,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c248e821eac79248a2f8adc42a9ad56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1067383408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067383401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba3bd8f32d4a275478cd14cfc24ea654, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitEventLevelFailed:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hitEventLevelComplete:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  hitEventGameComplete:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &1110395269
 GameObject:
   m_ObjectHideFlags: 0
@@ -2476,6 +2434,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1861785221}
   m_CullTransparentMesh: 0
+--- !u!1 &2049815993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2049815995}
+  - component: {fileID: 2049815994}
+  m_Layer: 0
+  m_Name: BulletsPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2049815994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049815993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a07a3ba7f17f134298646680fa6f22d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefBullet: {fileID: 187579858344635225, guid: 48b01109617e30a4983f3d221ecfd071,
+    type: 3}
+  bulletsPoolSize: 10
+--- !u!4 &2049815995
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2049815993}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 20.39287, y: 7.3839436, z: -9.916953}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2057235738
 GameObject:
   m_ObjectHideFlags: 0

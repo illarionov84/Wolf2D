@@ -5,17 +5,15 @@ using UnityEngine;
 namespace Wolf2D
 {
 
-    public class Ammo : MonoBehaviour
+    public class Ammo : BaseItem
     {
-        void OnTriggerEnter2D(Collider2D collision)
+        public override void Action()
         {
-            if (collision.gameObject.CompareTag("Player"))
+            isDestroy = false;
+            if (coll.GetComponent<Player>().Ammo < 99)
             {
-                if (collision.GetComponent<Player>().Ammo < 99)
-                {
-                    collision.GetComponent<Player>().Ammo += 8;
-                    Destroy(gameObject);
-                }
+                coll.GetComponent<Player>().Ammo += 8;
+                isDestroy = true;
             }
         }
     }

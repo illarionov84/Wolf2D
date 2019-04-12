@@ -119,3 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01169a741e8d1544283c470e8b55f3fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HitEventLevelComplete:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
